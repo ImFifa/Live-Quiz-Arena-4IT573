@@ -1,0 +1,56 @@
+{
+  "id": "geography",
+  "title": "Zeměpis",
+  "questions": [
+    {
+      "text": "Jaké je hlavní město Kanady?",
+      "choices": ["Toronto", "Ottawa", "Vancouver", "Montreal"],
+      "correct": "Ottawa"
+    },
+    {
+      "text": "Který oceán je největší?",
+      "choices": ["Atlantský", "Indický", "Severní ledový", "Tichý"],
+      "correct": "Tichý"
+    },
+    {
+      "text": "Na kterém kontinentu leží Argentina?",
+      "choices": ["Afrika", "Jižní Amerika", "Asie", "Evropa"],
+      "correct": "Jižní Amerika"
+    },
+    {
+      "text": "Jaké je hlavní město Austrálie?",
+      "choices": ["Sydney", "Melbourne", "Canberra", "Brisbane"],
+      "correct": "Canberra"
+    },
+    {
+      "text": "Která země má nejvíce obyvatel?",
+      "choices": ["Indie", "Čína", "USA", "Rusko"],
+      "correct": "Čína"
+    },
+    {
+      "text": "Která hora je nejvyšší na světě?",
+      "choices": ["K2", "Kilimandžáro", "Mount Everest", "Mont Blanc"],
+      "correct": "Mount Everest"
+    },
+    {
+      "text": "Který stát má největší rozlohu?",
+      "choices": ["Kanada", "Rusko", "Čína", "USA"],
+      "correct": "Rusko"
+    },
+    {
+      "text": "Jaký je nejdelší evropský veletok?",
+      "choices": ["Dunaj", "Volha", "Rýn", "Loira"],
+      "correct": "Volha"
+    },
+    {
+      "text": "Jak se jmenuje největší poušť na světě?",
+      "choices": ["Sahara", "Gobi", "Arktida", "Antarktida"],
+      "correct": "Antarktida"
+    },
+    {
+      "text": "Jaké moře leží mezi Itálií a Chorvatskem?",
+      "choices": ["Egejské", "Jaderské", "Černé", "Středozemní"],
+      "correct": "Jaderské"
+    }
+  ]
+}

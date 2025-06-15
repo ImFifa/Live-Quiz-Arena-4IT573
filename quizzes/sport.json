@@ -1,0 +1,56 @@
+{
+  "id": "sport",
+  "title": "Sport",
+  "questions": [
+    {
+      "text": "Kolik hráčů má fotbalový tým na hřišti?",
+      "choices": ["9", "10", "11", "12"],
+      "correct": "11"
+    },
+    {
+      "text": "Kdo vyhrál nejvíce titulů Formule 1?",
+      "choices": ["Michael Schumacher", "Lewis Hamilton", "Sebastian Vettel", "Ayrton Senna"],
+      "correct": "Lewis Hamilton"
+    },
+    {
+      "text": "Jak dlouho trvá maraton?",
+      "choices": ["21,1 km", "30 km", "42,195 km", "50 km"],
+      "correct": "42,195 km"
+    },
+    {
+      "text": "Kolik sad se hraje ve Wimbledonu (muži)?",
+      "choices": ["3", "4", "5", "6"],
+      "correct": "5"
+    },
+    {
+      "text": "Který sport se hraje s oranžovým míčkem a pálkou?",
+      "choices": ["Squash", "Badminton", "Tenis", "Stolní tenis"],
+      "correct": "Stolní tenis"
+    },
+    {
+      "text": "Kolik minut trvá hokejový zápas?",
+      "choices": ["45", "60", "90", "75"],
+      "correct": "60"
+    },
+    {
+      "text": "Kolik hráčů je na kurtu ve čtyřhře?",
+      "choices": ["2", "3", "4", "6"],
+      "correct": "4"
+    },
+    {
+      "text": "Jaký sport provozoval Emil Zátopek?",
+      "choices": ["Hokej", "Plavání", "Běh", "Skok do dálky"],
+      "correct": "Běh"
+    },
+    {
+      "text": "Který sport používá branky, ale není to fotbal?",
+      "choices": ["Basketbal", "Házená", "Kriket", "Volejbal"],
+      "correct": "Házená"
+    },
+    {
+      "text": "Kdy se konaly první moderní olympijské hry?",
+      "choices": ["1896", "1900", "1920", "1936"],
+      "correct": "1896"
+    }
+  ]
+}

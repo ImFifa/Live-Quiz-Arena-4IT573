@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hostovat – Live Quiz Arena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #9333ea, #1e3a8a);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center text-white font-sans">
+    <div class="bg-white/10 backdrop-blur-sm rounded-3xl shadow-2xl p-8 max-w-xl w-full border border-white/20">
+
+        <!-- Choose quiz -->
+        <div id='quizSelection' class="space-y-8">
+            <div>
+                <h1 class="text-3xl font-extrabold mb-1">Hostovat kvíz</h1>
+                <p>Vyber kvíz a vytvoř místnost</p>
+            </div>
+
+            <div class="space-y-4">
+                <select id="quizSelect"
+                    class="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                    <option value="">– Vyber kvíz –</option>
+                </select>
+
+                <label for="shuffleToggle" class="inline-flex items-center cursor-pointer">
+                    <input type="checkbox" value="1" id="shuffleToggle" class="sr-only peer" checked>
+                    <div
+                        class="relative w-11 h-6 rounded-full peer peer-focus:ring-4 peer-focus:ring-indigo-200 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-indigo-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-800">
+                    </div>
+                    <span class="ms-3 text-sm font-medium text-white-900">Zamíchat otázky</span>
+                </label>
+            </div>
+
+            <button id="create"
+                class="w-full bg-emerald-500 hover:bg-emerald-600 transition-all py-3 px-6 rounded-xl font-semibold shadow hover:scale-[1.02]">
+                Vytvořit místnost
+            </button>
+        </div>
+
+        <!-- Room info and player list -->
+        <div id='roomInfo' class="hidden space-y-8 ">
+            <div>
+                <p>Lobby kvízu</p>
+                <h1 id="quizTitle" class="text-3xl font-extrabold my-1"></h1>
+                <div class='flex justify-start items-center'>Kód místnosti: <span id="roomCode"
+                        class="ml-2 font-black text-white"></span>
+                    <button id="copyCodeBtn"
+                        class="ml-1 px-2 py-1 text-xs bg-white/20 hover:bg-white/30 rounded transition">
+                        📋
+                    </button>
+                </div>
+            </div>
+
+            <div id="hostQuestionView" class="hidden bg-white/10 rounded-xl p-4">
+                <h4 class="font-semibold text-white">Právě běží otázka <span id="hostCurrentQ"></span>/<span
+                        id="hostTotalQ"></span></h4>
+                <p id="hostQuestionText" class="mt-2 text-white/90"></p>
+                <p class="text-sm text-white/70 mt-2">Odpovědělo: <span id="answeredCount"></span>/<span
+                        id="totalPlayers"></span> hráčů</p>
+            </div>
+
+            <div id="playersBlock" class="hidden">
+                <h3 class="text-lg font-semibold text-white mb-2">Připojení hráči</h3>
+                <table class="w-full text-white text-sm bg-white/10 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr class="bg-white/20">
+                            <th class="px-4 py-2">Hráč</th>
+                            <th class="px-4 py-2">Body</th>
+                        </tr>
+                    </thead>
+                    <tbody id="playerList"></tbody>
+                </table>
+            </div>
+
+            <div class="flex flex-row justify-center items-center gap-3 font-semibold">
+                <button id="startQuiz" class="flex-1 bg-green-500 hover:bg-green-600 py-3 px-6 rounded-xl shadow">
+                    Spustit kvíz
+                </button>
+                <button id="nextQuestion" class="flex-1 hidden bg-blue-800 hover:bg-blue-900 py-3 rounded-xl shadow">
+                    Další otázka
+                </button>
+                <button id="endNowBtn" class="hidden bg-red-600 hover:bg-red-700 px-6 py-3 rounded-xl shadow">
+                    Ukončit
+                </button>
+                <a href="/" id='backToHome'
+                    class="flex-1 text-center hidden py-3 px-6 bg-blue-800 hover:bg-blue-900 rounded-xl shadow">
+                    Zpět na úvod
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const quizSelect = document.getElementById('quizSelect');
+        const roomInfo = document.getElementById('roomInfo');
+        const roomCode = document.getElementById('roomCode');
+        const quizTitle = document.getElementById('quizTitle');
+        const playerList = document.getElementById('playerList');
+        const nextBtn = document.getElementById('nextQuestion');
+        const hostQuestionText = document.getElementById('hostQuestionText');
+        const hostCurrentQ = document.getElementById('hostCurrentQ');
+        const hostTotalQ = document.getElementById('hostTotalQ');
+        const answeredCount = document.getElementById('answeredCount');
+        const totalPlayers = document.getElementById('totalPlayers');
+
+        let currentRoomId = null;
+        let quizData = null;
+        let currentPlayers = [];
+
+        function toggleVisibility(elementIds, show) {
+            elementIds.forEach(id => {
+                document.querySelector('#' + id).style.display = show ? 'block' : 'none';
+            });
+        }
+
+        fetch('/api/quizzes')
+            .then(res => res.json())
+            .then(data => {
+                quizData = data;
+                data.forEach(q => {
+                    const opt = document.createElement('option');
+                    opt.value = q.id;
+                    opt.innerHTML = q.title;
+                    quizSelect.appendChild(opt);
+                });
+            });
+
+        document.getElementById('create').onclick = () => {
+            const selectedQuiz = quizSelect.value;
+            if (!selectedQuiz) return alert('Vyberte kvíz');
+
+            const shuffle = document.getElementById('shuffleToggle').checked;
+            const roomId = Math.random().toString(36).substring(2, 6).toUpperCase();
+
+            socket.emit('host-quiz', {
+                quizId: selectedQuiz,
+                roomId,
+                shuffleQuestions: shuffle
+            });
+        };
+
+        socket.on('quiz-ready', (data) => {
+            currentRoomId = data.roomId;
+            roomCode.textContent = data.roomId;
+            quizTitle.textContent = data.title;
+            toggleVisibility(['quizSelection'], false);
+            toggleVisibility(['roomInfo'], true);
+        });
+
+        socket.on('players-updated', (data) => {
+            currentPlayers = data.players;
+
+            playerList.innerHTML = '';
+            const sorted = [...data.players].sort((a, b) => b.score - a.score);
+            sorted.forEach((p) => {
+                const row = document.createElement('tr');
+                let bgClass = '';
+                if (p.lastAnswer === 'correct') bgClass = 'bg-green-200/50';
+                else if (p.lastAnswer === 'wrong') bgClass = 'bg-red-200/50';
+                row.className = `${bgClass}`;
+                row.innerHTML = `
+          <td class="px-4 py-2">${p.nickname}</td>
+          <td class="px-4 py-2">${p.score}</td>
+        `;
+                playerList.appendChild(row);
+            });
+
+            if (playerList.children.length > 0) {
+                toggleVisibility(['playersBlock'], true);
+            }
+
+            const total = currentPlayers.length;
+            const answered = currentPlayers.filter(p => p.hasAnswered).length ?? 0;
+            answeredCount.textContent = answered;
+            totalPlayers.textContent = total;
+
+            if (data.status === 'in-progress') {
+                hostCurrentQ.textContent = data.currentQuestion;
+                hostTotalQ.textContent = data.totalQuestions;
+
+                if (data.currentQuestion >= data.totalQuestions) {
+                    nextBtn.textContent = 'Ukončit kvíz a zobrazit výsledky';
+                }
+            }
+        });
+
+        document.getElementById('startQuiz').onclick = () => {
+            if (playerList.children.length < 2) {
+                return alert('Musíte mít alespoň 2 hráče připojené k místnosti.');
+            }
+
+            socket.emit('start-quiz');
+            toggleVisibility(['hostQuestionView', 'nextQuestion', 'endNowBtn'], true);
+            toggleVisibility(['startQuiz'], false);
+
+        };
+
+        document.getElementById('endNowBtn').onclick = () => {
+            if (confirm('Opravdu chcete okamžitě ukončit a vyhodnotit kvíz?')) {
+                toggleVisibility(['hostQuestionView', 'nextQuestion', 'endNowBtn'], false);
+                toggleVisibility(['backToHome'], true);
+                socket.emit('end-quiz');
+            }
+        };
+
+        nextBtn.onclick = () => {
+            console.log(currentPlayers);
+            const notAnswered = currentPlayers.filter(p => !p.hasAnswered).length;
+            if (notAnswered > 0) {
+                if (!confirm(`Ještě neodpovědělo ${notAnswered} hráčů. Opravdu chcete pokračovat?`)) return;
+            }
+
+            socket.emit('next-question');
+        };
+
+        socket.on('error', msg => alert(`Chyba: ${msg}`));
+
+        document.getElementById('copyCodeBtn').onclick = () => {
+            const code = document.getElementById('roomCode').textContent;
+            if (!code) return;
+
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.getElementById('copyCodeBtn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '✅';
+                setTimeout(() => (btn.innerHTML = originalText), 1500);
+            }).catch(err => {
+                alert('Nepodařilo se zkopírovat kód.');
+                console.error(err);
+            });
+        };
+    </script>
+</body>
+
+</html>

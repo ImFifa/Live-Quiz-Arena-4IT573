@@ -1,0 +1,52 @@
+{
+  "id": "science",
+  "title": "Věda a technika",
+  "questions": [
+    {
+      "text": "Kolik planet má sluneční soustava?",
+      "choices": ["7", "8", "9", "10"],
+      "correct": "8"
+    },
+    {
+      "text": "Který prvek má chemickou značku 'O'?",
+      "choices": ["Osmium", "Oxygen", "Oxid", "Ortanol"],
+      "correct": "Oxygen"
+    },
+    {
+      "text": "Co je to DNA?",
+      "choices": ["Kyselina deoxyribonukleová", "Kyselina ribonukleová", "Protein", "Buňka"],
+      "correct": "Kyselina deoxyribonukleová"
+    },
+    {
+      "text": "Kdo vynalezl žárovku?",
+      "choices": ["Edison", "Tesla", "Newton", "Galileo"],
+      "correct": "Edison"
+    },
+    {
+      "text": "Která planeta je nejblíže Slunci?",
+      "choices": ["Venuše", "Země", "Merkur", "Mars"],
+      "correct": "Merkur"
+    },
+    {
+      "text": "Jaká je jednotka elektrického proudu?",
+      "choices": ["Volt", "Watt", "Ampér", "Ohm"],
+      "correct": "Ampér"
+    },
+    {
+      "text": "Který plyn dýcháme?",
+      "choices": ["Dusík", "Kyslík", "Oxid uhličitý", "Helium"],
+      "correct": "Kyslík"
+    },
+    {
+      "text": "Kdo formuloval zákony pohybu?",
+      "choices": ["Einstein", "Galileo", "Newton", "Kepler"],
+      "correct": "Newton"
+    },
+    { "text": "Kolik nohou má pavouk?", "choices": ["6", "8", "10", "12"], "correct": "8" },
+    {
+      "text": "Jak se nazývá změna skupenství z kapalného na plynné?",
+      "choices": ["Sublimace", "Vypařování", "Tání", "Kondenzace"],
+      "correct": "Vypařování"
+    }
+  ]
+}

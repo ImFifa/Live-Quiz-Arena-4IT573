@@ -1,0 +1,220 @@
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Připojit se – Live Quiz Arena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3a8a, #9333ea);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center text-white font-sans">
+    <!-- Countdown Overlay -->
+    <div id="countdownOverlay"
+        class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50 text-white text-3xl font-bold">
+        <span id="countdownMessage"></span>
+    </div>
+
+    <div class="bg-white/10 backdrop-blur-sm rounded-3xl shadow-2xl p-8 max-w-xl w-full border border-white/20">
+        <!-- Lobby Screen -->
+        <div id="lobby" class="space-y-8">
+            <div>
+                <h1 class="text-3xl font-extrabold">Připojit se ke kvízu</h1>
+                <p class="text-white/70 mt-1">Zadej kód místnosti a své jméno</p>
+            </div>
+
+            <div class='space-y-4'>
+                <input id="room" placeholder="Kód místnosti (např. X7D3)"
+                    class="w-full px-4 py-3 rounded-xl bg-white/20 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+
+                <input id="username" placeholder="Tvoje jméno (např. Filip)"
+                    class="w-full px-4 py-3 rounded-xl bg-white/20 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+            </div>
+
+            <button onclick="join()"
+                class="w-full bg-emerald-500 hover:bg-emerald-600 transition-all py-3 px-6 rounded-xl font-semibold shadow-lg hover:scale-[1.02]">
+                Připojit se
+            </button>
+        </div>
+
+        <!-- Waiting Room -->
+        <div id="waitingRoom" class="hidden space-y-8">
+            <div>
+                <h1 class="text-3xl font-extrabold" id='quizTitle'></h1>
+                <p class="text-white/70 mt-1">
+                    Počet otázek: <span id="questionCount" class="text-white font-semibold">0</span>
+                </p>
+            </div>
+
+            <div id='waitingMessage' class='bg-white/10 rounded-xl p-4 font-semibold text-lg'>
+                Čekáme na hostitele...
+            </div>
+
+            <div id="playersList" class="bg-white/10 rounded-xl p-4">
+                <h3 class="text-lg font-semibold text-white mb-2">Připojení hráči</h3>
+                <ul id="players" class="space-y-1 text-white/90 text-sm"></ul>
+            </div>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quizContainer" class="hidden space-y-8">
+            <div>
+                <h1 class="text-3xl font-extrabold" id="quizTitlePlaying"></h1>
+                <p class="text-white/70 mt-1">Otázka <span id="currentQuestion"></span>/<span
+                        id="totalQuestions"></span></p>
+            </div>
+
+            <div id="questionBox" class="bg-white/10 rounded-xl p-4">
+                <h4 id="questionText" class="text-lg font-medium mb-3 text-white"></h4>
+                <div id="choices" class="space-y-2"></div>
+            </div>
+
+            <div id="answerFeedback" class="hidden">
+                <p id="feedbackText" class="font-bold text-xl"></p>
+                <p id="waitingNext" class="text-white/70 mt-2">Čekáme na další otázku...</p>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="hidden space-y-8">
+            <h1 class="text-3xl font-extrabold">Výsledky kvízu</h1>
+
+            <table class="w-full text-white text-sm bg-white/10 rounded-xl overflow-hidden">
+                <thead>
+                    <tr class="bg-white/20">
+                        <th class="px-4 py-2">Hráč</th>
+                        <th class="px-4 py-2">Body</th>
+                    </tr>
+                </thead>
+                <tbody id="finalResults"></tbody>
+            </table>
+
+            <a href="/"
+                class="block text-center mt-6 py-3 px-6 bg-blue-800 hover:bg-blue-900 rounded-xl shadow font-semibold">
+                Zpět na úvod
+            </a>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let currentRoomId = null;
+
+        function join() {
+            const name = document.getElementById('username').value.trim();
+            const roomId = document.getElementById('room').value.trim().toUpperCase();
+            if (!name || !roomId) return alert("Zadej jméno i kód místnosti.");
+            socket.emit('player-join', { nickname: name, roomId });
+        }
+
+        socket.on('joined', (data) => {
+            currentRoomId = data.roomId;
+            document.getElementById('lobby').style.display = 'none';
+            if (data.status === 'waiting') {
+                document.getElementById('waitingRoom').style.display = 'block';
+                document.getElementById('quizTitle').textContent = data.quizTitle;
+                document.getElementById('questionCount').textContent = data.questionCount;
+            } else {
+                document.getElementById('quizContainer').style.display = 'block';
+                socket.emit('new-question');
+            }
+        });
+
+        socket.on('players-updated', (data) => {
+            const playersList = document.getElementById(data.status === 'waiting' ? 'players' : 'currentPlayers');
+            if (playersList) {
+                playersList.innerHTML = '';
+                data.players.forEach(p => {
+                    const li = document.createElement('li');
+                    li.textContent = `${p.nickname} (${p.score} bodů)` + (p.hasAnswered ? ' ✓' : ' ⌛');
+                    playersList.appendChild(li);
+                });
+            }
+            if (data.status === 'in-progress') {
+                document.getElementById('waitingRoom').style.display = 'none';
+                document.getElementById('quizContainer').style.display = 'block';
+                document.getElementById('quizTitlePlaying').textContent = data.quizTitle;
+                document.getElementById('currentQuestion').textContent = data.currentQuestion;
+                document.getElementById('totalQuestions').textContent = data.totalQuestions;
+            }
+        });
+
+        socket.on('new-question', q => {
+            document.getElementById('questionText').textContent = q.text || 'Bez textu';
+            document.getElementById('answerFeedback').style.display = 'none';
+            document.getElementById('waitingNext').style.display = 'none';
+
+            const choicesDiv = document.getElementById('choices');
+            choicesDiv.innerHTML = '';
+            q.choices.forEach(c => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-md';
+                btn.textContent = c;
+                btn.onclick = () => {
+                    socket.emit('answer', { answer: c });
+                    document.querySelectorAll('#choices button').forEach(b => b.disabled = true);
+                };
+                choicesDiv.appendChild(btn);
+            });
+        });
+
+        socket.on('answer-result', (r) => {
+            const fb = document.getElementById('answerFeedback');
+            fb.style.display = 'block';
+            document.getElementById('feedbackText').textContent = r.correct ? 'Správně! ✔️' : 'Špatně ❌';
+        });
+
+        socket.on('next-question-pending', () => {
+            document.getElementById('waitingNext').style.display = 'block';
+        });
+
+        socket.on('quiz-finished', (data) => {
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'block';
+            const r = document.getElementById('finalResults');
+            data.results.sort((a, b) => b.score - a.score);
+            data.results.forEach(p => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-4 py-2">${p.nickname}</td>
+                    <td class="px-4 py-2 font-black">${p.score}</td>
+                `;
+                finalResults.appendChild(row);
+            });
+        });
+
+        socket.on('countdown-start', ({ message, duration }) => {
+            const overlay = document.getElementById('countdownOverlay');
+            const msg = document.getElementById('countdownMessage');
+            overlay.style.display = 'flex';
+            let count = duration;
+
+
+            msg.textContent = `${message} ${count}...`;
+            count--;
+            const interval = setInterval(() => {
+                if (count <= 0) {
+                    clearInterval(interval);
+                    overlay.style.display = 'none';
+                    return;
+                }
+                msg.textContent = `${message} ${count}...`;
+                count--;
+            }, 1000);
+        });
+
+        socket.on('host-disconnected', () => {
+            alert('Hostitel ukončil kvíz. Budete přesměrováni.');
+            window.location.href = '/';
+        });
+
+        socket.on('error', (msg) => alert(`Chyba: ${msg}`));
+    </script>
+</body>
+
+</html>

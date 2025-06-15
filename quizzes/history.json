@@ -1,0 +1,61 @@
+{
+  "id": "history",
+  "title": "Historie",
+  "questions": [
+    {
+      "text": "Kdo byl prvním prezidentem Československa?",
+      "choices": ["Tomáš Garrigue Masaryk", "Edvard Beneš", "Klement Gottwald", "Alexander Dubček"],
+      "correct": "Tomáš Garrigue Masaryk"
+    },
+    {
+      "text": "Ve kterém roce padla Bastila?",
+      "choices": ["1789", "1812", "1799", "1765"],
+      "correct": "1789"
+    },
+    {
+      "text": "Který konflikt začal atentátem v Sarajevu?",
+      "choices": [
+        "První světová válka",
+        "Druhá světová válka",
+        "Válka v Koreji",
+        "Napoleonské války"
+      ],
+      "correct": "První světová válka"
+    },
+    {
+      "text": "Kdy bylo založeno Československo?",
+      "choices": ["1918", "1945", "1938", "1920"],
+      "correct": "1918"
+    },
+    {
+      "text": "Kdo byl římským císařem v době narození Ježíše?",
+      "choices": ["Augustus", "Nero", "Tiberius", "Caligula"],
+      "correct": "Augustus"
+    },
+    {
+      "text": "Kdy skončila druhá světová válka?",
+      "choices": ["1945", "1944", "1946", "1947"],
+      "correct": "1945"
+    },
+    {
+      "text": "Kdo objevil Ameriku?",
+      "choices": ["Vasco da Gama", "Kryštof Kolumbus", "Marco Polo", "James Cook"],
+      "correct": "Kryštof Kolumbus"
+    },
+    {
+      "text": "Jaký byl výsledek bitvy na Bílé hoře?",
+      "choices": ["Porážka stavů", "Vítězství stavů", "Remíza", "Změna náboženství"],
+      "correct": "Porážka stavů"
+    },
+    {
+      "text": "Kdy vznikla Evropská unie?",
+      "choices": ["1992", "1989", "1990", "1995"],
+      "correct": "1992"
+    },
+    {
+      "text": "Který král vládl v době husitských válek?",
+      "choices": ["Václav IV.", "Karel IV.", "Ludvík Jagellonský", "Ferdinand I."],
+      "correct": "Václav IV."
+    }
+  ]
+}

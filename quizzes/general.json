@@ -1,0 +1,48 @@
+{
+  "id": "general",
+  "title": "Obecný přehled",
+  "questions": [
+    {
+      "text": "Kdy začala 2. světová válka?",
+      "choices": ["1914", "1939", "1945", "1923"],
+      "correct": "1939"
+    },
+    {
+      "text": "Kolik je 9 * 9?",
+      "choices": ["81", "72", "90", "99"],
+      "correct": "81"
+    },
+    {
+      "text": "Jak se jmenuje současný prezident České republiky?",
+      "choices": ["Miloš Zeman", "Petr Pavel", "Václav Klaus", "Andrej Babiš"],
+      "correct": "Petr Pavel"
+    },
+    {
+      "text": "Jaký je největší kontinent?",
+      "choices": ["Afrika", "Asie", "Evropa", "Antarktida"],
+      "correct": "Asie"
+    },
+    { "text": "Kolik měsíců má rok?", "choices": ["10", "11", "12", "13"], "correct": "12" },
+    {
+      "text": "Jaká je hlavní měna v ČR?",
+      "choices": ["Euro", "Koruna", "Dolar", "Frank"],
+      "correct": "Koruna"
+    },
+    {
+      "text": "Který den následuje po pátku?",
+      "choices": ["Čtvrtek", "Sobota", "Neděle", "Úterý"],
+      "correct": "Sobota"
+    },
+    {
+      "text": "Kolik písmen má česká abeceda?",
+      "choices": ["26", "30", "42", "34"],
+      "correct": "42"
+    },
+    {
+      "text": "Jaký je symbol železa v periodické tabulce?",
+      "choices": ["Fe", "Ir", "Zl", "Jz"],
+      "correct": "Fe"
+    },
+    { "text": "Kolik prstů má člověk?", "choices": ["8", "10", "12", "14"], "correct": "10" }
+  ]
+}

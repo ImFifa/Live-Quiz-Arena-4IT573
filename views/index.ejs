@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Quiz Arena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3a8a, #9333ea);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center text-white font-sans">
+    <div
+        class="bg-white/10 backdrop-blur-sm rounded-3xl shadow-2xl p-10 max-w-lg w-full text-center border border-white/20">
+        <div class="mb-6">
+            <div class="text-6xl mb-2">🧠</div>
+            <h1 class="text-4xl font-extrabold mb-2">Live Quiz Arena</h1>
+            <p class="text-white/80 text-sm">Připoj se k zábavnému vědomostnímu kvízu v reálném čase</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+            <a href="/host"
+                class="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition-all duration-300 font-semibold text-white shadow-md hover:scale-105">
+                🎤 Hostovat kvíz
+            </a>
+            <a href="/join"
+                class="w-full sm:w-auto px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 transition-all duration-300 font-semibold text-white shadow-md hover:scale-105">
+                🎮 Připojit se
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>
