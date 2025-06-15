@@ -1,0 +1,58 @@
+# Node dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Environment files
+.env
+.env.*.local
+.env.local
+.env.test.local
+.env.production.local
+
+# Build output
+dist/
+build/
+tmp/
+temp/
+.cache/
+.next/
+out/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Coverage / test
+coverage/
+*.lcov
+
+# Misc
+*.tgz
+*.bak
+*.swp
+*.swo
+*.orig
+*.log.*
+
+# TypeScript
+*.tsbuildinfo
